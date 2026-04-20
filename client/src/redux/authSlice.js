@@ -4,7 +4,7 @@ import axios from 'axios';
 const userToken = localStorage.getItem('userToken') ? localStorage.getItem('userToken') : null;
 const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null;
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
     try {

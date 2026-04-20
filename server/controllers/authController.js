@@ -29,9 +29,7 @@ exports.login = async (req, res) => {
 
         if (!user) return res.status(401).json({ message: 'Invalid email or password' });
 
-        let isMatch = false;
-        if (role === 'patient') isMatch = await user.matchPassword(password);
-        else isMatch = password === 'mockpassword'; // Simple mock for doctors/admins in MVP unless we add bcrypt to them
+        const isMatch = await user.matchPassword(password);
 
         if (isMatch) {
             res.json({ _id: user._id, name: user.name, email: user.email, role: role, token: generateToken(user._id, role) });
