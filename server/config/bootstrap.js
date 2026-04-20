@@ -13,7 +13,7 @@ const defaultDoctors = [
         doctor_id: 'DOC-001',
         name: 'Dr. Emma Carter',
         specialization: 'Cardiology',
-        experience: 12,
+        experience: 12, 
         hospital: 'MediLuxe Heart Institute',
         fee: 120,
         email: 'doctor1@mediluxe.com',
@@ -38,6 +38,23 @@ const defaultDoctors = [
         fee: 140,
         email: 'doctor3@mediluxe.com',
         availableSlots: ['08:30 AM', '12:30 PM', '05:00 PM'],
+    },
+];
+
+const defaultAdmins = [
+    {
+        admin_id: 'ADMIN-001',
+        name: 'Platform Administrator',
+        email: 'admin@mediluxe.com',
+        phone: '+91 99999 99999',
+        password: DEFAULT_PORTAL_PASSWORD,
+    },
+    {
+        admin_id: 'ADMIN-002',
+        name: 'Admin User',
+        email: 'admin@gmail.com',
+        phone: '+91 99999 99998',
+        password: 'admin@1234',
     },
 ];
 
@@ -66,17 +83,14 @@ async function ensureSeedData() {
         }
     }
 
-    const existingAdmin = await Admin.findOne({ email: 'admin@mediluxe.com' });
-    if (!existingAdmin) {
-        await Admin.create({
-            admin_id: 'ADMIN-001',
-            name: 'Platform Administrator',
-            email: 'admin@mediluxe.com',
-            phone: '+91 99999 99999',
-            password: DEFAULT_PORTAL_PASSWORD,
-        });
-    } else if (!existingAdmin.password) {
-        await Admin.updateOne({ _id: existingAdmin._id }, { $set: { password: await bcrypt.hash(DEFAULT_PORTAL_PASSWORD, 10) } });
+    for (const adminSeed of defaultAdmins) {
+        const existingAdmin = await Admin.findOne({ email: adminSeed.email });
+
+        if (!existingAdmin) {
+            await Admin.create(adminSeed);
+        } else if (!existingAdmin.password) {
+            await Admin.updateOne({ _id: existingAdmin._id }, { $set: { password: await bcrypt.hash(adminSeed.password, 10) } });
+        }
     }
 }
 

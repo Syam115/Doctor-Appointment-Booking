@@ -29,7 +29,7 @@ export default function Navbar() {
           ) : (
             <>
               <NavLink to="/login" className="nav-link">Sign In</NavLink>
-              <Link to="/register" className="btn btn-primary">Get Started</Link>
+              <Link to="/register" className="btn btn-primary">Create account</Link>
             </>
           )}
         </div>

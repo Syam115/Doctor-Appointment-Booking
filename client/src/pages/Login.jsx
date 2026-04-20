@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../redux/authSlice';
 
@@ -9,12 +9,20 @@ export default function Login() {
   const [role, setRole] = useState('patient');
 
   const dispatch = useDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
   const { userInfo, loading, error } = useSelector((state) => state.auth);
+  const redirectTo = location.state?.redirectTo;
+  const redirectState = location.state?.redirectState;
 
   useEffect(() => {
-    if (userInfo) navigate(`/dashboard/${userInfo.role}`);
-  }, [userInfo, navigate]);
+    if (userInfo) {
+      navigate(redirectTo || `/dashboard/${userInfo.role}`, {
+        replace: true,
+        state: redirectState,
+      });
+    }
+  }, [userInfo, navigate, redirectTo, redirectState]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

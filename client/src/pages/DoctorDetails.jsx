@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export default function DoctorDetails() {
   const { id } = useParams();
+  const { userInfo } = useSelector((state) => state.auth);
   const [doc, setDoc] = useState(null);
 
   useEffect(() => {
@@ -34,7 +36,12 @@ export default function DoctorDetails() {
           </div>
         </div>
 
-        <Link to="/book" state={{ doc }} className="btn btn-primary" style={{ width: '100%', marginTop: '1.5rem' }}>
+        <Link
+          to={userInfo ? '/book' : '/login'}
+          state={userInfo ? { doc } : { redirectTo: '/book', redirectState: { doc } }}
+          className="btn btn-primary"
+          style={{ width: '100%', marginTop: '1.5rem' }}
+        >
           Proceed to Booking
         </Link>
       </aside>
