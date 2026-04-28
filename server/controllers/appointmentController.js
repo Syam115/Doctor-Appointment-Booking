@@ -77,7 +77,12 @@ exports.bookAppointment = async (req, res) => {
 
 exports.rescheduleAppointment = async (req, res) => {
     try {
-        const { date, start_time, end_time } = req.body;
+        const { date, start_time, end_time } = req.body || {};
+
+        if (!date || !start_time) {
+            return res.status(400).json({ message: 'Please select both a new date and a new time slot' });
+        }
+
         const appt = await Appointment.findById(req.params.id).populate('doctorId', 'name availableSlots');
         if (!appt) return res.status(404).json({ message: 'Appointment not found' });
 

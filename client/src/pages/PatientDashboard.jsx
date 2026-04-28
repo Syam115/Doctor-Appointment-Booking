@@ -49,8 +49,19 @@ export default function PatientDashboard() {
 
   const handleReschedule = async (id) => {
     try {
-      await rescheduleAppointment(id, reschedule[id], userToken);
-      setReschedule((current) => ({ ...current, [id]: undefined }));
+      const payload = reschedule[id];
+
+      if (!payload?.date || !payload?.start_time) {
+        alert('Please choose both a new date and a time slot before rescheduling.');
+        return;
+      }
+
+      await rescheduleAppointment(id, payload, userToken);
+      setReschedule((current) => {
+        const next = { ...current };
+        delete next[id];
+        return next;
+      });
       await loadAppointments();
     } catch (error) {
       alert(error.response?.data?.message || error.message);
